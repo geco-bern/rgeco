@@ -1,16 +1,43 @@
-Package: RTemplate
-Title: Your project
-Version: 0.1
-Authors@R: 
-    person(
-      given = "John",
-      family = "Doe",
-      email = "john.doe@example.com",
-      role = c("aut", "cre"),
-      comment = c(ORCID = "0000-0000-0000-0000")
-    )
-Description: What the package does (one paragraph).
+Package: rgeco
+Version: 0.9
+Title: GECO group tools
+Authors@R: c(
+            person(
+               family = "Hufkens",
+               given = "Koen",
+               email = "koen.hufkens@gmail.com",
+               comment = c(ORCID = "0000-0002-5070-8109"),
+               role = c("aut", "cre")),
+            person(
+              family = "Benjamin",
+              given = "Stocker",
+              email = "benjamin.stocker@gmail.com",
+              comment = c(ORCID = "0000-0003-2697-9096"),
+              role = c("aut")),
+            person(given = "Geocomputation and Earth Observation, University of Bern",
+                role = c("cph", "fnd"))
+           )
+Description: A collection of diverse functions to serve data wrangling and visualisations for research by the research group for Geocomputation and Earth Observation (GECO). 
+URL: https://github.com/geco-bern/GECOr
+BugReports: https://github.com/geco-bern/GECOr/issues
+Depends:
+    R (>= 4.2)
+Imports:
+    terra,
+    dplyr,
+    tidyr,
+    raster,
+    fs,
+    cowplot,
+    scico,
+    ncmeta
+Suggests:
+    knitr,
+    rmarkdown,
+    covr,
+    testthat
 License: AGPL-3
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
+LazyData: true
+ByteCompile: true
 RoxygenNote: 7.2.3
+VignetteBuilder: knitr
