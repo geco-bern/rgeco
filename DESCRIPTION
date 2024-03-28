@@ -30,7 +30,9 @@ Imports:
     fs,
     cowplot,
     scico,
-    ncmeta
+    ncmeta,
+    here,
+    ggplot
 Suggests:
     knitr,
     rmarkdown,
