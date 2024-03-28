@@ -17,7 +17,6 @@ knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 library(ggplot2)
 library(rgeco)
-library(here)
 ```
 
 An event is defined here as consecutive time steps where a certain condition is fulfilled - yielding a vector of a logical (boolean) variable. This vignette demonstrates how such events are derived from the boolean vector using the GECOr function `get_consecutive()`, and a time series data frame re-arranged and labelled with sequential time steps into a given event (`eventstep`), using the GECOr function `align_events()`. 
