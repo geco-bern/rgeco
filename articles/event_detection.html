@@ -133,10 +133,10 @@ Stocker</h4>
 condition is fulfilled - yielding a vector of a logical (boolean)
 variable. This vignette demonstrates how such events are derived from
 the boolean vector using the GECOr function
-<code>get_consecutive()</code>, and a time series data frame re-arranged
+<code><a href="../reference/get_consecutive.html">get_consecutive()</a></code>, and a time series data frame re-arranged
 and labelled with sequential time steps into a given event
 (<code>eventstep</code>), using the GECOr function
-<code>align_events()</code>.</p>
+<code><a href="../reference/align_events.html">align_events()</a></code>.</p>
 <div class="section level2">
 <h2 id="prepare-data">Prepare data<a class="anchor" aria-label="anchor" href="#prepare-data"></a>
 </h2>
@@ -164,9 +164,9 @@ that contains this information as a boolean vector
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>isfrost <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">TA_F_MDS</span> <span class="op">&lt;</span> <span class="fl">0</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>With this vector, we can apply the function
-<code>get_consecutive()</code>.</p>
+<code><a href="../reference/get_consecutive.html">get_consecutive()</a></code>.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">events</span> <span class="op">&lt;-</span> <span class="fu">get_consecutive</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">events</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_consecutive.html">get_consecutive</a></span><span class="op">(</span></span>
 <span>  <span class="va">df</span><span class="op">$</span><span class="va">isfrost</span>,</span>
 <span>  merge_threshold <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  leng_threshold <span class="op">=</span> <span class="fl">5</span>,</span>
@@ -225,7 +225,7 @@ events.</p>
 re-arranged, treating each event as a comparable sequence of time steps
 (here days).</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">aligned</span> <span class="op">&lt;-</span> <span class="fu">align_events</span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">aligned</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/align_events.html">align_events</a></span><span class="op">(</span></span>
 <span>  <span class="va">df</span>, </span>
 <span>  events <span class="op">=</span> <span class="va">events</span>,</span>
 <span>  leng_threshold <span class="op">=</span> <span class="fl">5</span>,</span>

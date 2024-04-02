@@ -19,6 +19,36 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/reference/align_events.html</loc>
+  </url>
+  <url>
+    <loc>/reference/collect_drivers_sofun.html</loc>
+  </url>
+  <url>
+    <loc>/reference/extract_nc.html</loc>
+  </url>
+  <url>
+    <loc>/reference/gc_era5_request.html</loc>
+  </url>
+  <url>
+    <loc>/reference/gc_rsofun_driver_era5.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_consecutive.html</loc>
+  </url>
+  <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/nc_to_df.html</loc>
+  </url>
+  <url>
+    <loc>/reference/plot_map4.html</loc>
+  </url>
+  <url>
+    <loc>/reference/prepare_setup_sofun.html</loc>
+  </url>
+  <url>
+    <loc>/reference/read_nc_onefile.html</loc>
   </url>
 </urlset>
