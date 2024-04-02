@@ -22,8 +22,6 @@
 #' \code{"idx_event"}.
 #' @export
 #'
-#' @examples df_alg <- align_events( df, truefalse, before=30, after=300 )
-#'
 align_events <- function(
     df,
     events,
