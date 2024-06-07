@@ -90,7 +90,7 @@
                         <h4 data-toc-skip class="author">Beni
 Stocker</h4>
             
-            <h4 data-toc-skip class="date">2024-05-06</h4>
+            <h4 data-toc-skip class="date">2024-06-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/geco-bern/GECOr/blob/HEAD/vignettes/event_detection.Rmd" class="external-link"><code>vignettes/event_detection.Rmd</code></a></small>
       <div class="hidden name"><code>event_detection.Rmd</code></div>
@@ -113,19 +113,7 @@ Stocker</h4>
 <span><span class="co">## loading 'rgeco'</span></span></code></pre>
 <pre><code><span><span class="co">## Warning: replacing previous import 'magrittr::extract' by 'tidyr::extract' when</span></span>
 <span><span class="co">## loading 'rgeco'</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: replacing previous import 'dplyr::union' by 'raster::union' when</span></span>
-<span><span class="co">## loading 'rgeco'</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: replacing previous import 'dplyr::intersect' by 'raster::intersect'</span></span>
-<span><span class="co">## when loading 'rgeco'</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: replacing previous import 'tidyr::extract' by 'raster::extract' when</span></span>
-<span><span class="co">## loading 'rgeco'</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: replacing previous import 'dplyr::select' by 'raster::select' when</span></span>
-<span><span class="co">## loading 'rgeco'</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: replacing previous import 'raster::intersect' by</span></span>
-<span><span class="co">## 'lubridate::intersect' when loading 'rgeco'</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: replacing previous import 'raster::union' by 'lubridate::union' when</span></span>
-<span><span class="co">## loading 'rgeco'</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: replacing previous import 'raster::origin' by 'lubridate::origin' when</span></span>
+<pre><code><span><span class="co">## Warning: replacing previous import 'terra::origin' by 'lubridate::origin' when</span></span>
 <span><span class="co">## loading 'rgeco'</span></span></code></pre>
 <pre><code><span><span class="co">## Warning: replacing previous import 'cowplot::stamp' by 'lubridate::stamp' when</span></span>
 <span><span class="co">## loading 'rgeco'</span></span></code></pre>
@@ -143,7 +131,7 @@ and labelled with sequential time steps into a given event
 <p>Read data from the file contained in this repository. This is a data
 frame containing time series of multiple variables arranged in columns
 and each time step (day) is a row.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"data/df_ch-lae.rds"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Below, let’s consider the following variables:</p>
 <ul>
@@ -160,12 +148,12 @@ and each time step (day) is a row.</p>
 temperature is below zero and create a new variable in the data frame
 that contains this information as a boolean vector
 (<code>isfrost</code>).</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>isfrost <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">TA_F_MDS</span> <span class="op">&lt;</span> <span class="fl">0</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>With this vector, we can apply the function
 <code><a href="../reference/get_consecutive.html">get_consecutive()</a></code>.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">events</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_consecutive.html">get_consecutive</a></span><span class="op">(</span></span>
 <span>  <span class="va">df</span><span class="op">$</span><span class="va">isfrost</span>,</span>
 <span>  merge_threshold <span class="op">=</span> <span class="fl">3</span>,</span>
@@ -175,7 +163,7 @@ that contains this information as a boolean vector
 <p>This yields information about the events start and length, expressed
 in index position of the boolean vector (here
 <code>df$isfrost</code>).</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">events</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   idx_start len</span></span>
 <span><span class="co">## 1        15  24</span></span>
@@ -185,7 +173,7 @@ in index position of the boolean vector (here
 <span><span class="co">## 5       418  25</span></span>
 <span><span class="co">## 6       717  11</span></span></code></pre>
 <p>We can use this to get the corresponding dates.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># get start and end date of longest sequences</span></span>
 <span><span class="va">events</span> <span class="op">&lt;-</span> <span class="va">events</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
@@ -194,7 +182,7 @@ in index position of the boolean vector (here
 <span>  <span class="op">)</span></span></code></pre></div>
 <p>With this information, we can visualise the detected frost
 events.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="co"># grey rectangles for each event</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_rect</a></span><span class="op">(</span></span>
@@ -224,7 +212,7 @@ events.</p>
 <p>Now that the events are detected, the data within each event can be
 re-arranged, treating each event as a comparable sequence of time steps
 (here days).</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aligned</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/align_events.html">align_events</a></span><span class="op">(</span></span>
 <span>  <span class="va">df</span>, </span>
 <span>  events <span class="op">=</span> <span class="va">events</span>,</span>
@@ -235,7 +223,7 @@ re-arranged, treating each event as a comparable sequence of time steps
 <p>We can now plot data during each frost event versus the
 <code>idx_event</code> (here day into frost event, counting from 0, in
 the output data frame).</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aligned</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">idx_event</span>, <span class="va">TA_F_MDS</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
