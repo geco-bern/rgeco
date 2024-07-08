@@ -1,60 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/articles/event_detection.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/align_events.html</loc>
-  </url>
-  <url>
-    <loc>/reference/collect_drivers_sofun.html</loc>
-  </url>
-  <url>
-    <loc>/reference/df_to_grid.html</loc>
-  </url>
-  <url>
-    <loc>/reference/extract_nc.html</loc>
-  </url>
-  <url>
-    <loc>/reference/gc_era5_request.html</loc>
-  </url>
-  <url>
-    <loc>/reference/gc_rsofun_driver_era5.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_consecutive.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nc_to_df.html</loc>
-  </url>
-  <url>
-    <loc>/reference/plot_map4.html</loc>
-  </url>
-  <url>
-    <loc>/reference/prepare_setup_sofun.html</loc>
-  </url>
-  <url>
-    <loc>/reference/read_nc_onefile.html</loc>
-  </url>
-  <url>
-    <loc>/reference/write_nc2.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/articles/event_detection.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/reference/align_events.html</loc></url>
+<url><loc>/reference/collect_drivers_sofun.html</loc></url>
+<url><loc>/reference/df_to_grid.html</loc></url>
+<url><loc>/reference/extract_nc.html</loc></url>
+<url><loc>/reference/gc_era5_request.html</loc></url>
+<url><loc>/reference/gc_rsofun_driver_era5.html</loc></url>
+<url><loc>/reference/get_consecutive.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/nc_to_df.html</loc></url>
+<url><loc>/reference/plot_map4.html</loc></url>
+<url><loc>/reference/prepare_setup_sofun.html</loc></url>
+<url><loc>/reference/read_nc_onefile.html</loc></url>
+<url><loc>/reference/write_nc2.html</loc></url>
 </urlset>
+
