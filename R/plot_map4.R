@@ -70,14 +70,14 @@ plot_map4 <- function(obj, varnam = NA, maxval = NA, breaks = NA, lonmin = -180,
 	# create a bounding box for the robinson projection (following https://github.com/stineb/GECO_map/issues/1)
 	eps <- 0.0
 	bb <- sf::st_union(sf::st_make_grid(
-	  st_bbox(c(xmin = domain[["xmin"]] + eps,
+	  sf::st_bbox(c(xmin = domain[["xmin"]] + eps,
 	            xmax = domain[["xmax"]] - eps,
 	            ymax = domain[["ymax"]] - eps,
 	            ymin = domain[["ymin"]] + eps),
-	          crs = st_crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+	          crs = sf::st_crs("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
 	          ),
 	  n = 100)) |>
-	  st_union()
+	  sf::st_union()
 
 	## read 110 m resolution coastline from NaturalEarth data (is a shapefile)
 	layer_coast <- rnaturalearth::ne_coastline(scale = scale, returnclass = "sf")
@@ -287,7 +287,7 @@ plot_map4 <- function(obj, varnam = NA, maxval = NA, breaks = NA, lonmin = -180,
       names(df) <- c("x", "y", "layer")
     } else {
       df <- as.data.frame(obj, xy = TRUE) |>
-        select(x, y, layer = !!varnam)
+        dplyr::select(x, y, layer = !!varnam)
     }
 
   } else if (is.element("vars", ls(obj)) && is.element("lat", ls(obj)) && is.element("lon", ls(obj))){
@@ -303,7 +303,7 @@ plot_map4 <- function(obj, varnam = NA, maxval = NA, breaks = NA, lonmin = -180,
     df <- as_tibble(obj) %>%
       dplyr::filter(lon > lonmin & lon < lonmax & lat > latmin & lat < latmax) %>%
       dplyr::rename(x = lon, y = lat) |>
-      select(x, y, layer = !!varnam)
+      dplyr::select(x, y, layer = !!varnam)
   }
 
 	## of more than one variable is available, make varnam a required argument
@@ -391,7 +391,7 @@ plot_map4 <- function(obj, varnam = NA, maxval = NA, breaks = NA, lonmin = -180,
 
 	  if (colorscale %in% c("batlowK", "turku", "tokyo", "lapaz", "batlow",
 	                        "batlowW", "oslo", "bamako", "navia", "lajolla",
-	                        "lipari")){
+	                        "lipari", "roma")){
 	    colorscale <- scico::scico(nbin, palette = colorscale, direction = invert)
 	  } else {
 	    colorscale <- colorRampPalette( colorscale )( nbin )
@@ -420,7 +420,6 @@ plot_map4 <- function(obj, varnam = NA, maxval = NA, breaks = NA, lonmin = -180,
 	##---------------------------------------------
 	if (is_boolean){
 
-		require(vhs)
 		ggmap <- ggplot() +
 			geom_raster(data = df,
 									aes(x = x, y = y, fill = layer, color = layer),
