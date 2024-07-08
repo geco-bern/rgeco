@@ -427,7 +427,13 @@ plot_map4 <- function(obj, varnam = NA, maxval = NA, breaks = NA, lonmin = -180,
 			geom_raster(data = df,
 									aes(x = x, y = y, fill = layer, color = layer),
 									show.legend = TRUE)
-		colorscale <- vhs("maxell_gu")[c(3,2)]
+		# colorscale <- vhs("maxell_gu")[c(3,2)]
+	  # vhs_palettes <- list( # https://github.com/cj-holmes/vhs/blob/10692a2de29bfcf1e57d62ce992940b0b07e1470/R/palettes.R#L32
+	  #     #...
+	  #     maxell_gu =c("#1e241eff", "#29a274ff", "#777055ff")
+	  #     #...
+	  #   )
+		colorscale <- c("#777055ff", "#29a274ff")
 
 	} else {
 
@@ -562,7 +568,6 @@ plot_map4 <- function(obj, varnam = NA, maxval = NA, breaks = NA, lonmin = -180,
 
 
 ## Copied from https://github.com/adrfantini/plot_discrete_cbar
-
 plot_discrete_cbar = function(
     breaks, # Vector of breaks. If +-Inf are used, triangles will be added to the sides of the color bar
     palette = "Greys", # RColorBrewer palette to use
