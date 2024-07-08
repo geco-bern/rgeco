@@ -12,14 +12,17 @@
 #' @param after An integer specifying the number of days after the event onset to be retained in re-arranged data
 #' @param do_norm A logical specifying whether re-arranged data is to be normalised by the median value of the bin
 #' (number of bins given by argument \code{nbins}) before the event onset, given by argument \code{normbin}. Defaults to \code{FALSE}.
-#' @param nbins An integer, specifying the number of bins used to determine median values before event onset. Only used when code{do_norm=TRUE}. Defaults to 6.
-#' @param normbin An integer, specifying the bin number just before the event onset, used for normalisation. Only used when code{do_norm=TRUE}. Defaults to 2.
+#' @param nbins An integer, specifying the number of bins used to determine median values before event onset. Only used when \code{do_norm=TRUE}. Defaults to 6.
+#' @param normbin An integer, specifying the bin number just before the event onset, used for normalisation. Only used when \code{do_norm=TRUE}. Defaults to 2.
 #'
 #' @return A named list of data frames (\code{list( "df_idx_event", "df_idx_event_aggbyidx_event")}) containing data from all events and \code{before + after}
 #' dates (relative to event onset) with additional columns named \code{"inst"}, defining the event number (instance), and \code{"idx_event"}, defining
 #' the date relative to the respective event onset. The data frame \code{"df_idx_event"} contains rearranged, but otherwise unchanged data (unless
 #' \code{do_norm}=TRUE). The data frame \code{"df_idx_event_aggbyidx_event"} containes data aggregated across events with the mean and quantiles given for each
 #' \code{"idx_event"}.
+#' @import dplyr
+#' @import ggplot2
+#' @importFrom stats setNames
 #' @export
 #'
 align_events <- function(
@@ -84,7 +87,7 @@ align_events <- function(
       tmp <- df_idx_event |>
         dplyr::filter(!is.na(inbin)) |>
         group_by( inbin ) |>
-        summarise_at( vars(one_of(dovars)), funs(median( ., na.rm=TRUE )) )
+        summarise_at( vars(one_of(dovars)), funs(stats::median( ., na.rm=TRUE )) )
 
       norm <- slice(tmp, normbin)
 
@@ -104,11 +107,11 @@ align_events <- function(
 }
 
 q33 <- function( vec, ... ){
-  quantile( vec, 0.33, ...)
+  stats::quantile( vec, 0.33, ...)
 }
 
 q66 <- function( vec, ... ){
-  quantile( vec, 0.66, ...)
+  stats::quantile( vec, 0.66, ...)
 }
 
 

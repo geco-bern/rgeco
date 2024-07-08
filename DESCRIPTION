@@ -25,9 +25,12 @@ Depends:
 Imports:
     terra,
     magrittr,
+    methods,
+    grDevices,
     dplyr,
     tidyr,
     fs,
+    sf,
     cowplot,
     ncmeta,
     here,

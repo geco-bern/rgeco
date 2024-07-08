@@ -86,7 +86,7 @@ gc_rsofun_driver_era5 <- function(
   if(!inherits(files, "try-error")) {
     drivers <- lapply(files, function(file){
 
-      df <- read.table(file, sep = ",", header = TRUE)
+      df <- utils::read.table(file, sep = ",", header = TRUE)
       df <- df[,c(1,5)]
     })
 

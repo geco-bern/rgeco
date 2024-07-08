@@ -240,7 +240,7 @@ plot_map4 <- function(obj, varnam = NA, maxval = NA, breaks = NA, lonmin = -180,
 		## convert to data frame for ggplot
 		##---------------------------------------------
 		tstep <- 1
-		df <- as(rasta_reproj[[tstep]], "SpatialPixelsDataFrame")
+		df <- methods::as(rasta_reproj[[tstep]], "SpatialPixelsDataFrame")
 		df <- as.data.frame(df)
 		names(df) <- c("layer", "x", "y")
 
@@ -397,7 +397,7 @@ plot_map4 <- function(obj, varnam = NA, maxval = NA, breaks = NA, lonmin = -180,
 	                        "lipari", "roma")){
 	    colorscale <- scico::scico(nbin, palette = colorscale, direction = invert)
 	  } else {
-	    colorscale <- colorRampPalette( colorscale )( nbin )
+	    colorscale <- grDevices::colorRampPalette( colorscale )( nbin )
 	  }
 
 	} else if (class(colorscale)=="palette"){
