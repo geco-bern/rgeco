@@ -1,4 +1,4 @@
-#' Format an ERA5 based {rsofun} driver
+#' Format an ERA5 based \code{rsofun} driver
 #'
 #' Uses the ECMWF CDS workflow API to summarize rsofun driver files
 #' on a daily time step.
@@ -7,7 +7,7 @@
 #' @param site_info site info data frame including a site name, location, and
 #'  other ancillary variables
 #'
-#' @return ERA5 based {rsofun} drivers for a point location specified in the
+#' @return ERA5 based \code{rsofun} drivers for a point location specified in the
 #'  site_info parameter
 #' @export
 

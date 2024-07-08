@@ -7,6 +7,7 @@
 #' to be extracted (points organised by rows).
 #' @param filn A character string specifying the path to a raster file that can be read with
 #' \code{raster::brick} or \code{raster::raster}.
+#' @param get_time A boolean specifying whether to extract time from the raster file.
 #' @return A data frame of the same number of rows as \code{df} with extracted data
 #' nested in column \code{data}.
 #' @export

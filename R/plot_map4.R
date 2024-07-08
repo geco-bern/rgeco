@@ -3,7 +3,7 @@
 #' Returns a cowplot object for a global map plot.
 #'
 #' @param obj An object, either a \code{SpatRaster} (returned from a \code{terra::rast()} function call),
-#' or a list returned from a \code{GECOr::read_nc_onefile()} function call.
+#' or a list returned from a \code{rgeco::read_nc_onefile()} function call.
 #' @param varnam A charachter string specifying the variable name. Optional and
 #' used only if \code{obj} is a \code{SpatRaster} with multiple variables. If
 #' \code{obj} is a rbeni-nc object (returned by \code{read_nc_onefile()}),
@@ -44,7 +44,10 @@
 #' @param is_boolean A logical specifying whether the raster contains boolean values (either \code{TRUE} or \code{FALSE}). Defaults to \code{FALSE}.
 #' @param combine A boolean specifying whether the map and the colorscale should be combined using cowplot.
 #' Defaults to \code{TRUE}. If \code{FALSE}, a list of elements are retruned, where elements are the ggplot2 plot object
-#' and the coloscale object returned by the call to \link{plot_discrete_cbar}.
+#' and the coloscale object returned by the call to \code{plot_discrete_cbar}.
+#' @param ... ...
+#' @importFrom grDevices colorRampPalette
+#' @importFrom methods as
 #'
 #' @return A ggplot object for a global map plot.
 #' @export

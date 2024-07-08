@@ -8,8 +8,9 @@
 #' @param varnam A character string specifying the variable name in the data frame.
 #' @param lonnam A character string specifying the column name containing longitude
 #' values. Defaults to \code{"lon}.
-#' @param latnam A character string specifying the column name containing longitude
+#' @param latnam A character string specifying the column name containing latitude
 #' values. Defaults to \code{"lat}.
+#'
 #' @return A 2D matrix
 #' @export
 #'
@@ -17,14 +18,14 @@ df_to_grid <- function(df, varnam, lonnam = "lon", latnam = "lat"){
 
   lonvals <- unique(df[[lonnam]])
   latvals <- unique(df[[latnam]])
-  
+
   ## make sure no gaps
   lonvals2 <- seq(min(lonvals), max(lonvals), by = min(abs(lonvals[2:(length(lonvals))] - lonvals[1:(length(lonvals)-1)])))
   latvals2 <- seq(min(latvals), max(latvals), by = min(abs(latvals[2:(length(latvals))] - latvals[1:(length(latvals)-1)])))
-  
+
   # ## Expand to all gridcells
   # # grid <- paste0(dir, "s1_fapar3g_v3_global.fland.nc")
-  # 
+  #
   # if (grid=="halfdeg"){
   #   out <- list(
   #     lon = seq(from = -179.75, to = 179.75, by = 0.5),

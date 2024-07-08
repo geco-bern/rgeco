@@ -18,8 +18,8 @@ Authors@R: c(
                 role = c("cph", "fnd"))
            )
 Description: A collection of diverse functions to serve data wrangling and visualisations for research by the research group for Geocomputation and Earth Observation (GECO). 
-URL: https://github.com/geco-bern/GECOr
-BugReports: https://github.com/geco-bern/GECOr/issues
+URL: https://github.com/geco-bern/rgeco
+BugReports: https://github.com/geco-bern/rgeco/issues
 Depends:
     R (>= 4.2)
 Imports:
@@ -41,7 +41,8 @@ Suggests:
     covr,
     testthat
 License: AGPL-3
+Encoding: UTF-8
 LazyData: true
 ByteCompile: true
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 VignetteBuilder: knitr
