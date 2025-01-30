@@ -1,0 +1,41 @@
+---
+title: "Work with NetCDF"
+author: "Beni Stocker"
+date: "2025-01-30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(rgeco)
+library(here)
+```
+
+## Read
+
+Read contents of a NetCDF file into a data frame
+
+The variable name needs to be specified. You can obtain it by doing `ncdump -h cwdx80_forcing_halfdeg.nc` in the terminal.
+
+```{r}
+df <- nc_to_df(
+  here("data/cwdx80_forcing_halfdeg.nc"),
+  varnam = "cwdx80_forcing"
+  )
+
+df
+```
+
+This contains `NA` for cells that have no values.
+
+```{r}
+df <- df |> 
+  tidyr::drop_na()
+
+df
+```
+
+
