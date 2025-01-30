@@ -16,7 +16,7 @@ by argument \code{maskfiln}.}
 \item{lonnam}{A character string specifying the column name containing longitude
 values. Defaults to \code{"lon}.}
 
-\item{latnam}{A character string specifying the column name containing longitude
+\item{latnam}{A character string specifying the column name containing latitude
 values. Defaults to \code{"lat}.}
 }
 \value{

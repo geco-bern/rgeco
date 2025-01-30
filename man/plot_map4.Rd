@@ -40,7 +40,7 @@ plot_map4(
 }
 \arguments{
 \item{obj}{An object, either a \code{SpatRaster} (returned from a \code{terra::rast()} function call),
-or a list returned from a \code{GECOr::read_nc_onefile()} function call.}
+or a list returned from a \code{rgeco::read_nc_onefile()} function call.}
 
 \item{varnam}{A charachter string specifying the variable name. Optional and
 used only if \code{obj} is a \code{SpatRaster} with multiple variables. If
@@ -110,7 +110,9 @@ Defaults to \code{TRUE}. If \code{FALSE}, \code{geom_tile()} is used. The latter
 
 \item{combine}{A boolean specifying whether the map and the colorscale should be combined using cowplot.
 Defaults to \code{TRUE}. If \code{FALSE}, a list of elements are retruned, where elements are the ggplot2 plot object
-and the coloscale object returned by the call to \link{plot_discrete_cbar}.}
+and the coloscale object returned by the call to \code{plot_discrete_cbar}.}
+
+\item{...}{...}
 }
 \value{
 A ggplot object for a global map plot.

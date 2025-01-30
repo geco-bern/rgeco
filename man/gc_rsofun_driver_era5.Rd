@@ -2,7 +2,7 @@
 % Please edit documentation in R/gc_rsofun_driver_era5.R
 \name{gc_rsofun_driver_era5}
 \alias{gc_rsofun_driver_era5}
-\title{Format an ERA5 based {rsofun} driver}
+\title{Format an ERA5 based \code{rsofun} driver}
 \usage{
 gc_rsofun_driver_era5(user, site_info)
 }
@@ -13,7 +13,7 @@ gc_rsofun_driver_era5(user, site_info)
 other ancillary variables}
 }
 \value{
-ERA5 based {rsofun} drivers for a point location specified in the
+ERA5 based \code{rsofun} drivers for a point location specified in the
  site_info parameter
 }
 \description{

@@ -7,22 +7,22 @@
 collect_drivers_sofun(site_info, params_siml, meteo, fapar, co2, params_soil)
 }
 \arguments{
-\item{site_info}{A data frame containing site meta info (rows for sites). 
-Required columns are: \code{"sitename", "year_start", 
+\item{site_info}{A data frame containing site meta info (rows for sites).
+Required columns are: \code{"sitename", "year_start",
 "year_end", "lon", "lat", "elv"}. See \code{\link{prepare_setup_sofun}} for
 details.}
 
-\item{params_siml}{A nested data frame with rows for each site containing 
+\item{params_siml}{A nested data frame with rows for each site containing
 simulation parameters for SOFUN. See \code{\link{run_pmodel_f_bysite}} or
 \code{\link{run_biomee_f_bysite}}.}
 
 \item{meteo}{A nested data frame with rows for each site and meteorological
 forcing data time series nested inside a column named \code{"data"}.}
 
-\item{fapar}{A nested data frame with rows for each site and fAPAR 
+\item{fapar}{A nested data frame with rows for each site and fAPAR
 forcing data time series nested inside a column named \code{"data"}.}
 
-\item{co2}{A nested data frame with rows for each site and CO2 
+\item{co2}{A nested data frame with rows for each site and CO2
 forcing data time series nested inside a column named \code{"data"}.}
 
 \item{params_soil}{Soil texture data descriptor, a data frame with columns
@@ -33,6 +33,6 @@ A \code{rsofun} input data frame (see \link{p_model_drivers} for a detailed
 description of its structure and contents).
 }
 \description{
-Collect all drivers for site-level simulations 
+Collect all drivers for site-level simulations
 into a nested data frame with one row for each site.
 }

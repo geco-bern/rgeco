@@ -17,7 +17,7 @@ nc_to_df(
 }
 \arguments{
 \item{obj}{Either character string specifying the NetCDF file path to be read or a
-object returned by function \link{GECOr::read_nc_onefile()} or \link{GECOr::nc_to_df()}.}
+object returned by function \link{rgeco::read_nc_onefile()} or \link{rgeco::nc_to_df()}.}
 
 \item{varnam}{A character string specifying the variable name in the NetCDF file.}
 
