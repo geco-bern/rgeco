@@ -34,9 +34,9 @@ All events of length lower than \code{leng_threshold} are dropped.}
 \item{do_norm}{A logical specifying whether re-arranged data is to be normalised by the median value of the bin
 (number of bins given by argument \code{nbins}) before the event onset, given by argument \code{normbin}. Defaults to \code{FALSE}.}
 
-\item{nbins}{An integer, specifying the number of bins used to determine median values before event onset. Only used when code{do_norm=TRUE}. Defaults to 6.}
+\item{nbins}{An integer, specifying the number of bins used to determine median values before event onset. Only used when \code{do_norm=TRUE}. Defaults to 6.}
 
-\item{normbin}{An integer, specifying the bin number just before the event onset, used for normalisation. Only used when code{do_norm=TRUE}. Defaults to 2.}
+\item{normbin}{An integer, specifying the bin number just before the event onset, used for normalisation. Only used when \code{do_norm=TRUE}. Defaults to 2.}
 }
 \value{
 A named list of data frames (\code{list( "df_idx_event", "df_idx_event_aggbyidx_event")}) containing data from all events and \code{before + after}

@@ -3,7 +3,7 @@
 #' Returns a cowplot object for a global map plot.
 #'
 #' @param obj An object, either a \code{SpatRaster} (returned from a \code{terra::rast()} function call),
-#' or a list returned from a \code{GECOr::read_nc_onefile()} function call.
+#' or a list returned from a \code{rgeco::read_nc_onefile()} function call.
 #' @param varnam A charachter string specifying the variable name. Optional and
 #' used only if \code{obj} is a \code{SpatRaster} with multiple variables. If
 #' \code{obj} is a rbeni-nc object (returned by \code{read_nc_onefile()}),
@@ -44,7 +44,10 @@
 #' @param is_boolean A logical specifying whether the raster contains boolean values (either \code{TRUE} or \code{FALSE}). Defaults to \code{FALSE}.
 #' @param combine A boolean specifying whether the map and the colorscale should be combined using cowplot.
 #' Defaults to \code{TRUE}. If \code{FALSE}, a list of elements are retruned, where elements are the ggplot2 plot object
-#' and the coloscale object returned by the call to \link{plot_discrete_cbar}.
+#' and the coloscale object returned by the call to \code{plot_discrete_cbar}.
+#' @param ... ...
+#' @importFrom grDevices colorRampPalette
+#' @importFrom methods as
 #'
 #' @return A ggplot object for a global map plot.
 #' @export
@@ -237,7 +240,7 @@ plot_map4 <- function(obj, varnam = NA, maxval = NA, breaks = NA, lonmin = -180,
 		## convert to data frame for ggplot
 		##---------------------------------------------
 		tstep <- 1
-		df <- as(rasta_reproj[[tstep]], "SpatialPixelsDataFrame")
+		df <- methods::as(rasta_reproj[[tstep]], "SpatialPixelsDataFrame")
 		df <- as.data.frame(df)
 		names(df) <- c("layer", "x", "y")
 
@@ -394,7 +397,7 @@ plot_map4 <- function(obj, varnam = NA, maxval = NA, breaks = NA, lonmin = -180,
 	                        "lipari", "roma")){
 	    colorscale <- scico::scico(nbin, palette = colorscale, direction = invert)
 	  } else {
-	    colorscale <- colorRampPalette( colorscale )( nbin )
+	    colorscale <- grDevices::colorRampPalette( colorscale )( nbin )
 	  }
 
 	} else if (class(colorscale)=="palette"){
@@ -424,7 +427,13 @@ plot_map4 <- function(obj, varnam = NA, maxval = NA, breaks = NA, lonmin = -180,
 			geom_raster(data = df,
 									aes(x = x, y = y, fill = layer, color = layer),
 									show.legend = TRUE)
-		colorscale <- vhs("maxell_gu")[c(3,2)]
+		# colorscale <- vhs("maxell_gu")[c(3,2)]
+	  # vhs_palettes <- list( # https://github.com/cj-holmes/vhs/blob/10692a2de29bfcf1e57d62ce992940b0b07e1470/R/palettes.R#L32
+	  #     #...
+	  #     maxell_gu =c("#1e241eff", "#29a274ff", "#777055ff")
+	  #     #...
+	  #   )
+		colorscale <- c("#777055ff", "#29a274ff")
 
 	} else {
 
@@ -559,7 +568,6 @@ plot_map4 <- function(obj, varnam = NA, maxval = NA, breaks = NA, lonmin = -180,
 
 
 ## Copied from https://github.com/adrfantini/plot_discrete_cbar
-
 plot_discrete_cbar = function(
     breaks, # Vector of breaks. If +-Inf are used, triangles will be added to the sides of the color bar
     palette = "Greys", # RColorBrewer palette to use

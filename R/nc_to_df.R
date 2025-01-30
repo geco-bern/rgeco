@@ -4,7 +4,7 @@
 #' information
 #'
 #' @param obj Either character string specifying the NetCDF file path to be read or a
-#' object returned by function \link{GECOr::read_nc_onefile()} or \link{GECOr::nc_to_df()}.
+#' object returned by function \link{rgeco::read_nc_onefile()} or \link{rgeco::nc_to_df()}.
 #' @param varnam A character string specifying the variable name in the NetCDF file.
 #' @param lon A numeric vector specifying longitude values. Defaults to \code{NA}.
 #' @param lat A numeric vector specifying latitude values. Defaults to \code{NA}.
