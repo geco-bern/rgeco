@@ -39,6 +39,9 @@
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/event_detection.html">Event detection</a>
     </li>
+    <li>
+      <a href="../articles/work_with_netcdf.html">Work with NetCDF</a>
+    </li>
   </ul></li>
         <li>
   <a href="https://github.com/geco-bern/rgeco/" class="external-link">
@@ -106,7 +109,7 @@
 
 <dl><dt id="arg-obj">obj<a class="anchor" aria-label="anchor" href="#arg-obj"></a></dt>
 <dd><p>An object, either a <code>SpatRaster</code> (returned from a <code><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">terra::rast()</a></code> function call),
-or a list returned from a <code>GECOr::read_nc_onefile()</code> function call.</p></dd>
+or a list returned from a <code><a href="read_nc_onefile.html">rgeco::read_nc_onefile()</a></code> function call.</p></dd>
 
 
 <dt id="arg-varnam">varnam<a class="anchor" aria-label="anchor" href="#arg-varnam"></a></dt>
@@ -234,7 +237,11 @@ Defaults to <code>TRUE</code>. If <code>FALSE</code>, <code>geom_tile()</code> i
 <dt id="arg-combine">combine<a class="anchor" aria-label="anchor" href="#arg-combine"></a></dt>
 <dd><p>A boolean specifying whether the map and the colorscale should be combined using cowplot.
 Defaults to <code>TRUE</code>. If <code>FALSE</code>, a list of elements are retruned, where elements are the ggplot2 plot object
-and the coloscale object returned by the call to plot_discrete_cbar.</p></dd>
+and the coloscale object returned by the call to <code>plot_discrete_cbar</code>.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>...</p></dd>
 
 </dl></div>
     <div id="value">
