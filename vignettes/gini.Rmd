@@ -1,0 +1,192 @@
+---
+title: "GINI"
+author: "Beni Stocker"
+date: "2025-02-05"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(FluxDataKit)
+library(ineq)
+```
+
+Get information about which sites provide at least 3 consecutive years of good-quality data sequences. Code from https://geco-bern.github.io/FluxDataKit/articles/04_data_use.html. 
+```{r}
+sites <- FluxDataKit::fdk_site_info |>
+  filter(!(sitename %in% c("MX-Tes", "US-KS3"))) |>  # failed sites
+  filter(!(igbp_land_use %in% c("CRO", "WET"))) |> 
+  left_join(
+    fdk_site_fullyearsequence,
+    by = "sitename"
+  ) |> 
+  filter(!drop_gpp) |>  # where no full year sequence was found
+  filter(nyears_gpp >= 3)
+```
+
+Read files with daily data.
+```{r}
+path <- "~/data_2/FluxDataKit/v3.4/zenodo_upload/fluxnet/"  # adjust for your own local use: directory containing daily data
+
+read_onesite <- function(site, path){
+  filename <- list.files(path = path, 
+                        pattern = paste0("FLX_", site, "_FLUXDATAKIT_FULLSET_DD"), 
+                        full.names = TRUE
+                        )
+  out <- read_csv(filename) |> 
+    mutate(sitename = site)
+  return(out)
+}
+
+# read all daily data for the selected sites
+ddf <- purrr::map_dfr(
+  sites$sitename,
+  ~read_onesite(., path)
+)
+```
+
+Cut to full-year sequences of good-quality data.
+```{r}
+ddf <- ddf |>
+  left_join(
+    sites |> 
+      select(
+        sitename, 
+        year_start = year_start_gpp, 
+        year_end = year_end_gpp),
+    by = join_by(sitename)
+  ) |> 
+  mutate(year = year(TIMESTAMP)) |> 
+  filter(year >= year_start & year <= year_end) |> 
+  select(-year_start, -year_end, -year)
+```
+
+Select just one site for demo.
+```{r}
+tmp <- ddf |> 
+  dplyr::filter(sitename == "BE-Vie")
+```
+
+Calculate mean seasonal cycle.
+```{r}
+df_msc <- tmp |> 
+  mutate(doy = lubridate::yday(TIMESTAMP)) |> 
+  group_by(doy) |> 
+  summarise(
+    gpp_msc = mean(GPP_NT_VUT_REF, na.rm = TRUE)
+  )
+```
+
+Add mean seasonal cycle to full time series of one site.
+```{r}
+tmp <- tmp |> 
+  mutate(doy = lubridate::yday(TIMESTAMP)) |> 
+  left_join(
+    df_msc,
+    by = "doy"
+  )
+```
+
+Calculate anomaly from mean seasonal cycle.
+```{r}
+tmp <- tmp |> 
+  mutate(gpp_anom = GPP_NT_VUT_REF - gpp_msc)
+```
+
+```{r}
+gg1 <- tmp |> 
+  slice(1:3500) |>
+  ggplot(aes(TIMESTAMP, GPP_NT_VUT_REF)) +
+  geom_line()
+
+gg2 <- tmp |> 
+  slice(1:3500) |>
+  ggplot(aes(TIMESTAMP, gpp_anom)) +
+  geom_line()
+
+cowplot::plot_grid(
+  gg1,
+  gg2,
+  nrow = 2
+)
+```
+
+## Calculate GINI
+
+```{r}
+gini <- ineq::ineq(
+  abs(tmp$gpp_anom),
+  type = "Gini"
+)
+
+# winter months
+tmp |> 
+  mutate(month = lubridate::month(TIMESTAMP)) |> 
+  filter(month %in% c(12,1,2)) |> 
+  pull(gpp_anom) |> 
+  abs() |> 
+  ineq::ineq(., type = "Gini")
+
+# summer months
+tmp |> 
+  mutate(month = lubridate::month(TIMESTAMP)) |> 
+  filter(month %in% c(6,7,8)) |> 
+  pull(gpp_anom) |> 
+  abs() |> 
+  ineq::ineq(., type = "Gini")
+```
+
+## Gini for all sites
+
+Add anomaly from mean seasonal cycle for all sites.
+```{r}
+df_msc <- ddf |> 
+  mutate(doy = lubridate::yday(TIMESTAMP)) |> 
+  group_by(sitename, doy) |> 
+  summarise(
+    gpp_msc = mean(GPP_NT_VUT_REF, na.rm = TRUE)
+  )
+
+ddf <- ddf |> 
+  mutate(doy = lubridate::yday(TIMESTAMP)) |> 
+  left_join(
+    df_msc,
+    by = c("sitename", "doy")
+  ) |> 
+  mutate(gpp_anom = GPP_NT_VUT_REF - gpp_msc)
+```
+
+Apply Gini for all sites.
+```{r}
+df_gini <- ddf |> 
+  group_by(sitename) |> 
+  nest() |> 
+  mutate(gini = purrr::map_dbl(data, ~ineq::ineq(abs(.$gpp_anom), type = "Gini"))) |> 
+  select(-data)
+```
+
+Combine with site meta info.
+```{r}
+df_gini <- df_gini |> 
+  left_join(
+    FluxDataKit::fdk_site_info,
+    by = "sitename"
+  )
+```
+
+## Gini analysis
+
+```{r}
+df_gini |> 
+  ggplot(aes(mat, gini)) +
+  geom_point()
+
+df_gini |> 
+  ggplot(aes(p_over_pet, gini)) +
+  geom_point()
+
+df_gini |> 
+  ggplot(aes(igbp_land_use, gini)) +
+  geom_boxplot()
+```
+
