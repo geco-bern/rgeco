@@ -75,15 +75,11 @@ versus observed values.</p>
 <span>  <span class="va">mod</span>,</span>
 <span>  <span class="va">obs</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"points"</span>,</span>
-<span>  filnam <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  relative <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  xlim <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  ylim <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  use_factor <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shortsubtitle <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  plot_subtitle <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  plot_linmod <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  pal <span class="op">=</span> <span class="st">"batlowW"</span>,</span>
+<span>  pal <span class="op">=</span> <span class="st">"viridis"</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -111,12 +107,7 @@ observed values in data frame <code>df</code>.</p></dd>
 <dd><p>If <code>"points"</code>, uses <code>geom_points()</code>, if <code>"hex"</code>
 uses <code><a href="https://ggplot2.tidyverse.org/reference/geom_hex.html" class="external-link">ggplot2::geom_hex()</a></code>, if <code>"heat"</code> uses adjusted
 <code>geom_points()</code> with color indicating density, if <code>"density"</code> uses
-<code>stat_density_2d()</code> to draws polygos of equal density.</p></dd>
-
-
-<dt id="arg-filnam">filnam<a class="anchor" aria-label="anchor" href="#arg-filnam"></a></dt>
-<dd><p>A character string specifying the name of the file containing
-the plot. Defaults to <code>NA</code> (no file is created).</p></dd>
+<code>stat_density_2d()</code> to draw polygons of equal density.</p></dd>
 
 
 <dt id="arg-relative">relative<a class="anchor" aria-label="anchor" href="#arg-relative"></a></dt>
@@ -125,43 +116,23 @@ division by the mean) is to be showed in the subtitle labels.</p></dd>
 
 
 <dt id="arg-shortsubtitle">shortsubtitle<a class="anchor" aria-label="anchor" href="#arg-shortsubtitle"></a></dt>
-<dd><p>A boolean specifying whether to display a reduced set of metrics
+<dd><p>A logical specifying whether to display a reduced set of metrics
 in the subtitle.</p></dd>
 
 
 <dt id="arg-plot-subtitle">plot_subtitle<a class="anchor" aria-label="anchor" href="#arg-plot-subtitle"></a></dt>
-<dd><p>A boolean specifying whether to display any metrics. Defaults
+<dd><p>A logical specifying whether to display any metrics. Defaults
 to <code>TRUE</code>.</p></dd>
 
 
 <dt id="arg-plot-linmod">plot_linmod<a class="anchor" aria-label="anchor" href="#arg-plot-linmod"></a></dt>
-<dd><p>A boolean specifying whether to display the fitted linear
+<dd><p>A logical specifying whether to display the fitted linear
 regression as a red line. Defaults to <code>TRUE</code>.</p></dd>
 
 
-<dt id="arg-rsquared">rsquared<a class="anchor" aria-label="anchor" href="#arg-rsquared"></a></dt>
-<dd><p>A boolean specifying whether to display R-squared and the RMSE
-(if <code>TRUE</code>) or the r (Pearson's correlation coefficient) and the p (p-value of
-test of significance of correlation, if <code>TRUE</code>). Defaluts to <code>TRUE</code>.</p></dd>
-
-
-<dt id="arg-plot-legend">plot_legend<a class="anchor" aria-label="anchor" href="#arg-plot-legend"></a></dt>
-<dd><p>A boolean specifying whether to display a legend for the colors.
-Defaults to <code>TRUE</code> if <code>type</code> is one of  <code>"heat"</code>,  <code>"hex"</code>, or
-<code>"density"</code>.</p></dd>
-
-
-<dt id="arg-label">label<a class="anchor" aria-label="anchor" href="#arg-label"></a></dt>
-<dd><p>A boolean specifying whether points should be labelled using ggrepel.
-Defaults to <code>FALSE</code>. Only available for <code>type == "points"</code>. Use argument
-<code>nlabels</code> to specify how many points should be labelled, starting with points
-that have the largest residuals from the linear regression fit.</p></dd>
-
-
-<dt id="arg-id">id<a class="anchor" aria-label="anchor" href="#arg-id"></a></dt>
-<dd><p>A character string specifying the column name that identifies the points.
-The column's values must be of type integer and is used to label points in case of
-<code>label = TRUE</code>.</p></dd>
+<dt id="arg-pal">pal<a class="anchor" aria-label="anchor" href="#arg-pal"></a></dt>
+<dd><p>A character string indicating the color palette. Currently available:
+<code>"batlowW", "davos", "magma", "viridis", "cividis"</code>. Defaults to <code>"viridis"</code>.</p></dd>
 
 
 <dt id="arg-nlabels">nlabels<a class="anchor" aria-label="anchor" href="#arg-nlabels"></a></dt>
