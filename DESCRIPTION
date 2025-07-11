@@ -39,7 +39,8 @@ Imports:
     viridis,
     rnaturalearth,
     ncdf4,
-    stringr
+    stringr,
+    ggthemes
 Suggests:
     knitr,
     rmarkdown,

@@ -86,7 +86,7 @@ plot_map_simpl <- function(lonmin = -180,
     # plot coastline
     geom_sf(data = coast,
             colour = 'black',
-            size = 0.1) +
+            linewidth = 0.1) +
 
     # set extent in longitude and latitude
     coord_sf(xlim = c(lonmin, lonmax),
