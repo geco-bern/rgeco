@@ -12,33 +12,20 @@
 #' @param type If \code{"points"}, uses \code{geom_points()}, if \code{"hex"}
 #' uses \code{ggplot2::geom_hex()}, if \code{"heat"} uses adjusted
 #' \code{geom_points()} with color indicating density, if \code{"density"} uses
-#' \code{stat_density_2d()} to draws polygos of equal density.
-#' @param filnam A character string specifying the name of the file containing
-#' the plot. Defaults to \code{NA} (no file is created).
+#' \code{stat_density_2d()} to draw polygons of equal density.
 #' @param relative A logical specifying whether the relative RMSE and bias (after
 #' division by the mean) is to be showed in the subtitle labels.
-#' @param shortsubtitle A boolean specifying whether to display a reduced set of metrics
+#' @param shortsubtitle A logical specifying whether to display a reduced set of metrics
 #' in the subtitle.
-#' @param rsquared A boolean specifying whether to display R-squared and the RMSE
-#' (if \code{TRUE}) or the r (Pearson's correlation coefficient) and the p (p-value of
-#' test of significance of correlation, if \code{TRUE}). Defaluts to \code{TRUE}.
-#' @param plot_subtitle A boolean specifying whether to display any metrics. Defaults
+#' @param plot_subtitle A logical specifying whether to display any metrics. Defaults
 #' to \code{TRUE}.
-#' @param plot_linmod A boolean specifying whether to display the fitted linear
+#' @param plot_linmod A logical specifying whether to display the fitted linear
 #' regression as a red line. Defaults to \code{TRUE}.
-#' @param plot_legend A boolean specifying whether to display a legend for the colors.
-#' Defaults to \code{TRUE} if \code{type} is one of  \code{"heat"},  \code{"hex"}, or
-#' \code{"density"}.
-#' @param label A boolean specifying whether points should be labelled using ggrepel.
-#' Defaults to \code{FALSE}. Only available for \code{type == "points"}. Use argument
-#' \code{nlabels} to specify how many points should be labelled, starting with points
-#' that have the largest residuals from the linear regression fit.
-#' @param id A character string specifying the column name that identifies the points.
-#' The column's values must be of type integer and is used to label points in case of
-#' \code{label = TRUE}.
 #' @param nlabels An integer specifying how many points to be labelled, starting with points
 #' that have the largest residuals from the linear regression fit. Only available
 #' for \code{type == "points"}. Defaults to one.
+#' @param pal A character string indicating the color palette. Currently available:
+#' \code{"batlowW", "davos", "magma", "viridis", "cividis"}. Defaults to \code{"viridis"}.
 #'
 #' @export
 #'
@@ -47,15 +34,11 @@ analyse_modobs2 <- function(
   mod,
   obs,
   type = "points",
-  filnam = NA,
   relative = FALSE,
-  xlim = NULL,
-  ylim = NULL,
-  use_factor = NULL,
   shortsubtitle = FALSE,
   plot_subtitle = TRUE,
   plot_linmod = TRUE,
-  pal = "batlowW",
+  pal = "viridis",
   ...) {
 
 
@@ -149,9 +132,10 @@ analyse_modobs2 <- function(
                          italic(N) == .(n_lab))
   }
 
+  lims <- round(max(quantile(df$mod, 0.9999), quantile(df$obs, 0.9999)))
+
   if (type == "heat") {
 
-    # if (!identical(filnam, NA)) dev.off()
     gg <- heatscatter(
       df$mod,
       df$obs,
@@ -169,13 +153,7 @@ analyse_modobs2 <- function(
     if (plot_linmod) gg <- gg + geom_smooth(method = "lm", color = "red", size = 0.5, se = FALSE)
     if (plot_subtitle) gg <- gg + labs(subtitle = subtitle)
 
-    if (!identical(filnam, NA)) {
-      ggsave(filnam, width = 5, height = 5)
-    }
-
   } else if (type == "hex") {
-
-    lims <- round(max(quantile(df$mod, 0.9999), quantile(df$obs, 0.9999)))
 
     ## ggplot hexbin
     gg <- df %>%
@@ -194,14 +172,12 @@ analyse_modobs2 <- function(
       gg <- gg + khroma::scale_fill_batlowW(trans = "log", reverse = TRUE)
     } else if (pal == "davos"){
       gg <- gg + khroma::scale_fill_davos(trans = "log", reverse = TRUE)
+    } else {
+      gg <- gg + scale_fill_viridis_c(option = pal, trans = "log10", direction = -1)
     }
 
     if (plot_subtitle) gg <- gg + labs(subtitle = subtitle)
     if (plot_linmod) gg <- gg + geom_smooth(method = "lm", color = "red", size = 0.5, se = FALSE)
-
-    if (!identical(filnam, NA)) {
-      ggsave(filnam, width = 5, height = 5)
-    }
 
   } else if (type == "points") {
 
@@ -211,17 +187,14 @@ analyse_modobs2 <- function(
       geom_point() +
       geom_abline(intercept = 0, slope = 1, linetype = "dotted") +
       # coord_fixed() +
-      # xlim(0,NA) +
-      # ylim(0,NA) +
+      xlim(0, lims) +
+      ylim(0, lims) +
       theme_classic() +
       labs(x = mod, y = obs)
 
     if (plot_subtitle) gg <- gg + labs(subtitle = subtitle)
     if (plot_linmod) gg <- gg + geom_smooth(method = "lm", color = "red", size = 0.5, se = FALSE)
 
-    if (!identical(filnam, NA)) {
-      ggsave(filnam, width = 5, height = 5)
-    }
   } else if (type == "density") {
 
     ## points
@@ -234,17 +207,14 @@ analyse_modobs2 <- function(
       ) +
       geom_abline(intercept = 0, slope = 1, linetype = "dotted") +
       coord_fixed() +
-      xlim(0,NA) +
-      ylim(0,NA) +
+      xlim(0, lims) +
+      ylim(0, lims) +
       theme_classic() +
       labs(x = mod, y = obs)
 
     if (plot_subtitle) gg <- gg + labs(subtitle = subtitle)
     if (plot_linmod) gg <- gg + geom_smooth(method = "lm", color = "red", size = 0.5, se = FALSE)
 
-    if (!identical(filnam, NA)) {
-      ggsave(filnam, width = 5, height = 5)
-    }
   }
 
   return(list(df_metrics = df_metrics, gg = gg, linmod = linmod, results = results))
