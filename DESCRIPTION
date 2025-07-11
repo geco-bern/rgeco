@@ -41,7 +41,8 @@ Imports:
     ncdf4,
     stringr,
     ggthemes,
-    khroma
+    khroma,
+    hexbin
 Suggests:
     knitr,
     rmarkdown,
