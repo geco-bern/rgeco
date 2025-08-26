@@ -1,0 +1,85 @@
+---
+title: "R data frame to Latex table"
+author: "Beni Stocker"
+date: "2025-08-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r warning=FALSE, message=FALSE}
+library(dplyr)
+library(readr)
+library(here)
+library(xtable)
+```
+
+
+## Challenge
+
+We often want to include long table with lots of information, to be displayed in a paper. And very often, we have the contents of such a table as a data frame, e.g., in R. How do we go from an R data frame to a Latex table which can then be placed into a greater Latex manuscript file? It can be done on the fly. Here is how, using the FluxDataKit site list as an example.
+
+## In R
+
+The FluxDataKit site list is part of the FluxDataKit R package. To avoid complicated dependencies, it is also added as a file in this repository for demo purposes.
+
+Read the site meta info file, select and re-name columns to be displayed in table, and re-format them as desired.
+
+```{r warning=FALSE, message=FALSE}
+df <- read_csv(here("data/fdk_site_info.csv")) |> 
+  mutate(
+    lon = format(lon, digits = 2),
+    lat = format(lat, digits = 2),
+    elv = format(elv, digits = 2),
+    year_start = as.character(as.integer(year_start)),
+    year_end = as.character(as.integer(year_end))
+  ) |> 
+  select(
+    ID = sitename, 
+    `Lon.` = lon, 
+    `Lat.` = lat, 
+    `Ele.` = elv, 
+    `Start year` = year_start, 
+    `End year` = year_end, 
+    `Veg. type` = igbp_land_use
+    ) |> 
+  # for demo, include only top 30 rows
+  slice(1:30)
+```
+
+Write Latex-formatted source code for table into a file using {xtable}. First, generate text.
+
+```{r}
+latextable <- xtable::xtable(
+  df, 
+  caption = "FluxDataKit site list.", 
+  align = rep("l", (ncol(df) + 1))  # make all columns left-aligned
+  )
+```
+
+This looks like that:
+```{r}
+latextable
+```
+
+Then, write text to file.
+```{r}
+print( 
+  latextable, 
+  hline.after = c(-1, 0), 
+  file = paste0(tempdir(), "/table.tex"), 
+  include.rownames = FALSE
+  )
+```
+
+
+## In Latex
+
+This file can now be embedded in a Latex main source file by
+```
+# to be added in your .tex file
+\input{table.tex}
+```
+
