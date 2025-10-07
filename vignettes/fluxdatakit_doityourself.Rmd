@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r}
-# remotes::install_github("stineb/FluxDataKit")  # get my fork to have latest changes enabling more flexibility
+remotes::install_github("stineb/FluxDataKit")  # get my fork to have latest changes enabling more flexibility
 library(FluxDataKit)
 library(tidyverse)
 library(lubridate)
@@ -216,5 +216,7 @@ rsofun_drivers <- lapply(df_sites$sitename, function(site){
 
 # bind all tibbles into one big tibble
 rsofun_drivers <- dplyr::bind_rows(rsofun_drivers)
+
+readr::write_rds(rsofun_drivers, file = here::here("data/rsofun_drivers_CH-Dav_DE-Tha.rds"))
 ```
 
