@@ -1,0 +1,220 @@
+---
+title: "FluxDataKit - Do it yourself"
+author: "Beni Stocker"
+date: "2025-10-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE
+  )
+```
+
+```{r}
+# remotes::install_github("stineb/FluxDataKit")  # get my fork to have latest changes enabling more flexibility
+library(FluxDataKit)
+library(tidyverse)
+library(lubridate)
+library(here)
+```
+
+## Aim
+
+*FluxDataKit* is distributed as an R package, but is mainly of interest for the wider user group for its product -- the data. Yet, the R package contains the functionalities to gather FLUXNET-standard flux and meteo time series data, paired with satellite remote sensing time series data from MODIS, and complemented with static site meta information. This vignette demonstrates the use of these functionalities. The use case (aim) is the following:
+
+- Collect the latest available (half-hourly) flux data from two sites (CH-Dav and DE-Tha).
+- Download all available MODIS FPAR data
+- Aggregate to daily flux data and combine with smoothed and gapfilled MODIS FPAR
+- Construct rsofun driver object
+
+## Select sites
+
+Get site meta info from data contained in the FluxDataKit R package.
+```{r}
+df_sites <- fdk_site_info |> 
+  filter(sitename %in% c("CH-Dav", "DE-Tha"))
+
+df_sites
+```
+
+## Download flux data
+
+We use flux data the published ICOS release [*Ecosystem final quality (L2) product in ETC-Archive format - release 2025-1* (DOI: 10.18160/S6HM-CP8Q)](https://meta.icos-cp.eu/collections/1-HA2r4l5QUjAgQr5CCEfJe3)
+
+- **DE-Tha**: *Bernhofer, C., Eichelmann, U., Grünwald, T., Hehn, M., Mauder, M., Moderow, U., Prasse, H. (2025). ETC L2 ARCHIVE from Tharandt, 2020–2024, ICOS RI, https://hdl.handle.net/11676/4SDuyFmHhz7R1HlM2Mi9GsqN*
+
+- **CH-Dav**: *Feigenwinter, I., Etzold, S., Gharun, M., Hortnagl, L., Meier, P., Liechti, K., Stutz, T., Burri, S., Zweifel, R., Buchmann, N., Baur, T., Eugster, W., Gessler, A., Hug, C., Häni, M., Hüglin, C., Kumar, S., Marty, M., Schmitt Oehler, M., Staudinger, M., Sutter, F., Thimonier Rickenmann, A., Trotsiuk, V., Waldner, P., Wilhelm, M., Zhu, J., Zimmermann, S. (2025). ETC L2 ARCHIVE from Davos, 2019–2024, ICOS RI, https://hdl.handle.net/11676/l780s42CJOPE-rrWLfFxm4Ae*
+
+Download this data manually and deposit it in a local directory (here `~/data/icos_release_2025-1/`).
+```{r}
+path_parent <- "~/data/icos_release_2025-1/"
+```
+
+
+## Aggregate to daily flux data
+
+Reading standard FLUXNET HH (half-hourly) data file and aggregate, following FluxDataKit standard.
+
+```{r eval=FALSE}
+lapply(df_sites$sitename, function(site){
+  
+  # read HH data
+  vec_files <- list.files(
+    path_parent,
+    pattern = "^.*ICOSETC_.{2}-.{3}_FLUXNET_HH_L2.*$",
+    recursive = TRUE,
+    full.names = TRUE
+  )
+  filn <- vec_files[stringr::str_detect(vec_files, site)]
+  hdf <- read_csv(filn)
+  
+  # incredible: CH-Dav has no data for several variables in 2019
+  hdf <- hdf |>
+    dplyr::mutate(
+      # TIMESTAMP = as.Date(TIMESTAMP_START, "%Y%m%d%H%M")
+      TIMESTAMP_START = lubridate::ymd_hm(as.character(TIMESTAMP_START))
+    ) |>
+    dplyr::mutate(
+      TIMESTAMP = as_date(TIMESTAMP_START)
+    ) |>
+    mutate(across(where(is.numeric), ~ na_if(., -9999)))
+  
+  # visdat::vis_miss(
+  #   hdf |>
+  #     select(
+  #       TIMESTAMP, 
+  #       SW_IN_F_MDS,
+  #       TA_F_MDS, 
+  #       VPD_F_MDS, 
+  #       LW_IN_F_MDS,
+  #       WS_F,
+  #       NEE_VUT_REF,
+  #       GPP_NT_VUT_REF, 
+  #       GPP_DT_VUT_REF, 
+  #       RECO_NT_VUT_REF,
+  #       NETRAD, USTAR, 
+  #       LE_F_MDS, 
+  #       LE_CORR
+  #       ),
+  #   warn_large_data = FALSE
+  # )
+
+  # remove missing years' data, based on prior visual inspection
+  if (site == "CH-Dav"){
+    hdf <- hdf |> 
+      filter(year(TIMESTAMP) > 2019)
+  } else if (site == "DE-Tha"){
+    hdf <- hdf |> 
+      filter(year(TIMESTAMP) > 2020)
+  }
+  
+  # write downsampled data as well
+  fdk_downsample_fluxnet(
+    hdf,
+    site = site,
+    out_path = here::here("data/"),   # keep processed data in a separate directory
+    overwrite = FALSE,
+    interpret_timestamp = FALSE
+  )
+})
+
+list.files(
+  here::here("data/"),
+  pattern = "FLUXDATAKIT_FULLSET_DD"
+  )
+```
+
+## Download MODIS data
+
+Download and deposit data locally. This downloads all currently available data --  from 1 January 2000 to today (as in the day of data download). 
+```{r eval=FALSE}
+# download the modis data
+fdk_download_modis(
+  df = df_sites,
+  path = "~/data/modis_fluxnet/"
+)
+```
+
+## Smooth and append MODIS data into daily flux data
+
+```{r eval=FALSE}
+for (idx in seq(nrow(df_sites))){
+  
+  site <- df_sites$sitename[idx]
+  vec_files <- list.files(
+    here::here("data/"),
+    pattern = "^.*FLX_.{2}-.{3}_FLUXDATAKIT_FULLSET_DD_",
+    full.names = TRUE
+    )
+  filn <- vec_files[stringr::str_detect(vec_files, site)]
+
+  check_modis <- try(fdk_match_modis(
+    df = df_sites |> 
+      slice(idx),
+    path = "~/data/modis_fluxnet/",
+    csv_file = filn
+  ))
+}
+```
+
+Visualise data in CSV files.
+```{r}
+vec_files <- list.files(
+    here::here("data/"),
+    pattern = "^.*FLX_.{2}-.{3}_FLUXDATAKIT_FULLSET_DD_",
+    full.names = TRUE
+    )
+
+df <- read_csv(vec_files[1]) |> 
+  select(date = TIMESTAMP, TA_DAY_F_MDS, TMIN_F_MDS, SW_IN_F_MDS, VPD_DAY_F_MDS, GPP_NT_VUT_REF, LE_F_MDS, LAI, FPAR)
+
+df |> 
+  pivot_longer(cols = 2:9, values_to = "value", names_to = "variable") |> 
+  ggplot(aes(date, value)) +
+  geom_line() +
+  facet_wrap(~variable, scales = "free_y") +
+  labs(title = "CH-Dav")
+
+df <- read_csv(vec_files[2]) |> 
+  select(date = TIMESTAMP, TA_DAY_F_MDS, TMIN_F_MDS, SW_IN_F_MDS, VPD_DAY_F_MDS, GPP_NT_VUT_REF, LE_F_MDS, LAI, FPAR)
+
+df |> 
+  pivot_longer(cols = 2:9, values_to = "value", names_to = "variable") |> 
+  ggplot(aes(date, value)) +
+  geom_line() +
+  facet_wrap(~variable, scales = "free_y") +
+  labs(title = "DE-Tha")
+```
+
+## Create driver object
+
+Then create driver object from daily data.
+```{r}
+# Code copied from FluxDataKit: analysis/02_batch_format_rsofun_drivers.R
+
+# loop over all sites and process them to format
+# them into the correct rsofun format
+rsofun_drivers <- lapply(df_sites$sitename, function(site){
+
+  message(sprintf("Processing %s ----", site))
+
+  message("- compiling drivers")
+  # Use a uniform FLUXNET HH input
+  # file to generate  p-model (rsofun)
+  # compatible driver data
+
+ out <- fdk_format_drivers(
+    site_info = df_sites |> 
+      filter(sitename == !!site),
+    path = here::here("data/"),
+    pattern = "^.*FLX_.{2}-.{3}_FLUXDATAKIT_FULLSET_DD.*$",
+    verbose = TRUE
+  )
+  return(out)
+})
+
+# bind all tibbles into one big tibble
+rsofun_drivers <- dplyr::bind_rows(rsofun_drivers)
+```
+
