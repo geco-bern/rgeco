@@ -56,3 +56,5 @@ LazyData: true
 ByteCompile: true
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
+Remotes:
+    stineb/FluxDataKit
